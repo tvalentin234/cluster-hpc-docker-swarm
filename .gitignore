@@ -1,0 +1,15 @@
+
+# SO / cache / editor
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
+# Airflow / Grafana / Prometheus data (exemplo, se montar volumes locais)
+airflow/logs/
+grafana/data/
+prometheus/data/

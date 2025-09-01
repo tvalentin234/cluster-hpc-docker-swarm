@@ -1,0 +1,32 @@
+
+version: "3.8"
+
+networks:
+  mpi_net:
+    external: true
+
+services:
+  compute-daemon:
+    image: registry.local/mpi-mpich:4.1.3
+    networks: [mpi_net]
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.labels.role == compute
+    environment:
+      - SERVICE_NAME=compute-daemon
+    command: ["/bin/bash", "-lc", "generate_hostfile && /usr/sbin/sshd -D"]
+
+  # Exemplo de runner 'ocioso' que você pode reaproveitar para lançar trabalhos MPI
+  mpi-runner:
+    image: registry.local/mpi-mpich:4.1.3
+    networks: [mpi_net]
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    environment:
+      - SERVICE_NAME=compute-daemon
+    command: ["/bin/bash", "-lc", "generate_hostfile && tail -f /dev/null"]
